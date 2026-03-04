@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сервіс електротранспорту</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    text-align:center;
+    color:#222;
+}
+header{
+    background:#ff9800;
+    color:white;
+    padding:20px;
+}
+nav{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    background:#222;
+    padding:12px;
+}
+nav button{
+    background:#4caf50;
+    color:white;
+    border:none;
+    padding:8px 15px;
+    border-radius:20px;
+    cursor:pointer;
+    font-weight:bold;
+}
+section{padding:20px;}
+.card{
+    background:white;
+    margin:15px auto;
+    padding:20px;
+    border-radius:12px;
+    max-width:800px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+img{
+    width:100%;
+    border-radius:10px;
+    margin-top:10px;
+}
+canvas{
+    background:white;
+    border-radius:12px;
+    margin-top:20px;
+}
+.hidden{display:none;}
+footer{
+    background:#222;
+    color:white;
+    padding:15px;
+    margin-top:20px;
+}
+button.control{
+    padding:10px 20px;
+    margin:5px;
+    font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Сервіс електровелосипедів та самокатів ⚡</h1>
+<p>Професійний ремонт і технічне обслуговування</p>
+</header>
+
+<nav>
+<button onclick="showSection('home')">Головна</button>
+<button onclick="showSection('contacts')">Контакти</button>
+</nav>
+
+<!-- ГОЛОВНА -->
+<section id="home">
+
+<div class="card">
+<h2>Процес ремонту</h2>
+<p>
+1️⃣ Комп'ютерна діагностика контролера<br>
+2️⃣ Перевірка батареї (баланс осередків, напруга)<br>
+3️⃣ Огляд мотору (люфт, підшипники, обмотка)<br>
+4️⃣ Перевірка гальм і датчиків<br>
+5️⃣ Тест-драйв після ремонту
+</p>
+<img src="12.jpg">
+</div>
+
+<div class="card">
+<h2>Ремонт електросамокатів</h2>
+<p>
+• Заміна контролера<br>
+• Ремонт або заміна батареї<br>
+• Відновлення гальмівної системи<br>
+• Заміна підшипників<br>
+• Усунення люфтів
+</p>
+<img src="1.jpg">
+</div>
+
+<div class="card">
+<h2>Види моторів</h2>
+<p>
+🔹 Мотор-колесо (передній/задній привід)<br>
+🔹 Центральний мотор (Mid-drive)<br>
+🔹 Редукторний мотор<br>
+🔹 Direct Drive (без редуктора)
+</p>
+</div>
+
+<div class="card">
+<h2>Чому важливо вчасно робити ТО?</h2>
+<p>
+✔ Подовження ресурсу батареї<br>
+✔ Захист від перегріву<br>
+✔ Менше ризику поломок у дорозі<br>
+✔ Економія коштів у довгостроковій перспективі
+</p>
+</div>
+
+<div class="card">
+<h2>Міні-гра 🚴</h2>
+<p>Натисни старт. ПК — ← →, телефон — кнопки.</p>
+<button onclick="startGame()">СТАРТ</button>
+
+<div id="gameArea" class="hidden">
+<canvas id="game" width="300" height="400"></canvas><br>
+<button class="control" onclick="moveLeft()">⬅</button>
+<button class="control" onclick="moveRight()">➡</button>
+</div>
+</div>
+
+</section>
+
+<!-- КОНТАКТИ -->
+<section id="contacts" class="hidden">
+<div class="card">
+<h2>Телефон</h2>
+<p>+38 (099) 000-0000</p>
+</div>
+
+<div class="card">
+<h2>Адреса</h2>
+<p>Гараж №7, біля старого каштана</p>
+<p>Соборності 3</p>
+</div>
+
+<div class="card">
+<h2>Графік роботи</h2>
+<p>Пн–Сб: 9:00 – 18:00</p>
+</div>
+</section>
+
+<footer>© 2026 Сервіс електротранспорту</footer>
+
+<script>
+function showSection(id){
+document.getElementById('home').classList.add('hidden');
+document.getElementById('contacts').classList.add('hidden');
+document.getElementById(id).classList.remove('hidden');
+stopGame();
+}
+
+let canvas, ctx, bike, holes, score, gameInterval;
+
+function startGame(){
+document.getElementById("gameArea").classList.remove("hidden");
+canvas=document.getElementById("game");
+ctx=canvas.getContext("2d");
+bike={x:130,y:350};
+holes=[];
+score=0;
+gameInterval=setInterval(update,40); // повільніше
+}
+
+function stopGame(){
+clearInterval(gameInterval);
+}
+
+function update(){
+ctx.clearRect(0,0,300,400);
+
+if(Math.random()<0.02){
+holes.push({x:Math.random()*260+20,y:0});
+}
+
+holes.forEach(h=>h.y+=1.5); // повільний рух
+ctx.font="30px Arial";
+ctx.fillText("🚴",bike.x,bike.y);
+
+ctx.fillStyle="black";
+holes.forEach(h=>{
+ctx.beginPath();
+ctx.arc(h.x,h.y,15,0,Math.PI*2);
+ctx.fill();
+
+if(h.y>bike.y-20 && h.x>bike.x-20 && h.x<bike.x+40){
+alert("Гру завершено! Очки: "+score);
+stopGame();
+document.getElementById("gameArea").classList.add("hidden");
+}
+});
+
+holes=holes.filter(h=>h.y<400);
+score++;
+}
+
+function moveLeft(){ if(bike && bike.x>0) bike.x-=20; }
+function moveRight(){ if(bike && bike.x<260) bike.x+=20; }
+
+document.addEventListener("keydown",e=>{
+if(e.key==="ArrowLeft") moveLeft();
+if(e.key==="ArrowRight") moveRight();
+});
+</script>
+
+</body>
+</html>
